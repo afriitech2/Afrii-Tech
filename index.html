@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lamp Animation Login Form - Afrii Tech </title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #0d0d0d;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .container {
+            position: relative;
+            width: 800px;
+            height: 500px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        /* Lamp Styles */
+        .lamp-container {
+            position: relative;
+            width: 200px;
+            height: 350px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .lamp-shade {
+            width: 140px;
+            height: 90px;
+            background: #e0e0e0;
+            border-radius: 50px 50px 10px 10px;
+            position: relative;
+            z-index: 3;
+            box-shadow: inset 0 -10px 15px rgba(0,0,0,0.2);
+        }
+
+        .lamp-stand {
+            width: 10px;
+            height: 180px;
+            background: linear-gradient(to right, #666, #999, #666);
+            z-index: 2;
+        }
+
+        .lamp-base {
+            width: 100px;
+            height: 15px;
+            background: #555;
+            border-radius: 10px 10px 0 0;
+            z-index: 2;
+        }
+
+        /* Pull Chain */
+        .chain {
+            position: absolute;
+            top: 85px;
+            right: 55px;
+            cursor: pointer;
+            z-index: 4;
+            transition: transform 0.1s ease;
+        }
+
+        .chain-line {
+            width: 2px;
+            height: 60px;
+            background: #aaa;
+        }
+
+        .chain-ball {
+            width: 12px;
+            height: 12px;
+            background: #fff;
+            border-radius: 50%;
+            margin-left: -5px;
+            box-shadow: 0 0 5px rgba(255,255,255,0.5);
+        }
+
+        /* Lamp Glow Light Effect */
+        .lamp-light {
+            position: absolute;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 180px solid transparent;
+            border-right: 180px solid transparent;
+            border-bottom: 350px solid rgba(255, 235, 170, 0.18);
+            filter: blur(10px);
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Login Form Styles */
+        .login-box {
+            width: 320px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 15px 25px rgba(0,0,0,0.5);
+            opacity: 0.2;
+            transform: translateY(10px);
+            transition: all 0.5s ease-in-out;
+        }
+
+        .login-box h2 {
+            color: #fff;
+            text-align: center;
+            margin-bottom: 25px;
+            font-weight: 500;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #aaa;
+            font-size: 13px;
+            margin-bottom: 5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            outline: none;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        .form-group input:focus {
+            border-color: #ffd700;
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 25px;
+            background: linear-gradient(135deg, #e6c875, #bd9133);
+            color: #111;
+            font-weight: bold;
+            font-size: 15px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(230, 200, 117, 0.4);
+        }
+
+        /* Active State Styles */
+        body.light-on .lamp-light {
+            opacity: 1;
+        }
+
+        body.light-on .login-box {
+            opacity: 1;
+            transform: translateY(0);
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.15);
+            border-color: rgba(255, 215, 0, 0.3);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Lamp Section -->
+        <div class="lamp-container">
+            <div class="lamp-shade"></div>
+            <div class="lamp-stand"></div>
+            <div class="lamp-base"></div>
+            <div class="lamp-light" id="lampLight"></div>
+            <!-- Pull Chain -->
+            <div class="chain" id="pullChain">
+                <div class="chain-line"></div>
+                <div class="chain-ball"></div>
+            </div>
+        </div>
+
+        <!-- Login Form Section -->
+        <div class="login-box" id="loginBox">
+            <form onsubmit="return false;">
+                <h2>Welcome</h2>
+                
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" placeholder="Enter name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" placeholder="Enter Password" required>
+                </div>
+                
+                <button class="login-btn">Sign In</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const pullChain = document.getElementById('pullChain');
+
+        pullChain.addEventListener('click', () => {
+            pullChain.style.transform = 'translateY(15px)';
+            
+            setTimeout(() => {
+                pullChain.style.transform = 'translateY(0)';
+                document.body.classList.toggle('light-on');
+            }, 150);
+        });
+    </script>
+</body>
+</html>
